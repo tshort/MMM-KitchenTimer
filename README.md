@@ -7,15 +7,7 @@ It provides a touch-based, countdown timer. The buttons on the left add time to 
 
 ## Using the module
 
-Clone the repo into your modules directory as:
-
-```
-git clone https://github.com/tshort/MMM-KitchenTimer.git kitchen-timers	
-```
-
-## Using the module
-
-To use this module, add it to the modules array in the `config/config.js` file:
+Clone this repo into your modules directory. To use this module, add it to the modules array in the `config/config.js` file:
 
 ````javascript
 modules: [
