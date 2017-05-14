@@ -6,7 +6,7 @@
  * By Tom Short
  * MIT Licensed.
  */
-Module.register("kitchen-timers",{
+Module.register("MMM-KitchenTimer",{
     // Module config defaults.
     defaults: {
         timertext: ["1m", "5m", "20m"],
@@ -18,7 +18,7 @@ Module.register("kitchen-timers",{
     },
     // Define styles.
     getStyles: function() {
-        return ["kitchen-timers.css"];
+        return ["MMM-KitchenTimer.css"];
     },
     // Define start sequence.
     start: function() {

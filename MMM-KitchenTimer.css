@@ -1,7 +1,7 @@
-.kitchen-timers {
+MMM-KitchenTimer {
 }
 
-.kitchen-timers button {
+MMM-KitchenTimer .button {
   height: 40px;   
   margin-right: 5px;
   vertical-align: 130%;  
@@ -10,18 +10,18 @@
   border-radius: 10px;
 }
 
-.kitchen-timers span {
+MMM-KitchenTimer .span {
   font-size: 50pt;
 }
 
-.kitchen-timers .positive {
+MMM-KitchenTimer .positive {
   color: yellow;
 }
 
-.kitchen-timers .paused {
+MMM-KitchenTimer .paused {
   color: lightblue;
 }
 
-.kitchen-timers .negative {
+MMM-KitchenTimer .negative {
   color: orangered;
 }

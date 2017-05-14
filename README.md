@@ -20,7 +20,7 @@ To use this module, add it to the modules array in the `config/config.js` file:
 ````javascript
 modules: [
     {
-        module: "kitchen-timers",
+        module: "MMM-KitchenTimer",
         position: "top_left",
         config: {
             timertext: ["30s", "2m", "10m"],
