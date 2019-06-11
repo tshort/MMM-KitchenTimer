@@ -9,8 +9,9 @@
 Module.register("MMM-KitchenTimer",{
     // Module config defaults.
     defaults: {
-        timertext: ["1m", "5m", "20m"],
-        timersecs: [60, 300, 1200],
+        timertext: [],
+        timersecs: [],
+		currentTimer: 90,
     },
     // Define required scripts.
     getScripts: function() {
@@ -23,12 +24,32 @@ Module.register("MMM-KitchenTimer",{
     // Define start sequence.
     start: function() {
         Log.info("Starting module: " + this.name);
-
+		this.startTimer = false;
+		this.actualTimeLeft = this.config.currentTimer;
         // Schedule update.
+		/*
         setTimeout(function() {
-            self.getDom();
-        }, 1000);
+            self.updateDom();
+        }, 1000);*/
     },
+	notificationReceived: function(notification, payload, sender) {
+		Log.info(this.name + " - received notification: " + notification);
+		if(notification === "TIMER_MORE"){
+			this.startTimer = true;
+			this.actualTimeLeft = this.actualTimeLeft+30;
+			this.updateDom(100);
+		}
+		if(notification === "TIMER_LESS"){
+			this.startTimer = true;
+			this.actualTimeLeft = this.actualTimeLeft-30;
+			this.updateDom(100);
+		}
+		if(notification === "TIMER_STOP"){
+			this.startTimer = false;
+			this.actualTimeLeft = 0;
+			this.updateDom(100);
+		}
+	},
     // Override dom generator.
     getDom: function() {
         var time = 0, startTime, interval, alarm;
@@ -41,7 +62,7 @@ Module.register("MMM-KitchenTimer",{
         }
         function pause() {
             if (interval) {
-		        timerText.className = "paused";
+		        timerText.className = "timer_paused";
                 sound.pause();
                 clearInterval(interval);
                 interval = null;
@@ -61,7 +82,7 @@ Module.register("MMM-KitchenTimer",{
             return d / 1000;
         }
         function stop() {
-            beep.play();
+            //beep.play();
             pause();
             time = 0;
             display();
@@ -76,13 +97,15 @@ Module.register("MMM-KitchenTimer",{
             var hours = Math.abs(Math.trunc(time / 3600));
             var sign = Math.sign(time); 
             if (time > 0) {
-                timerText.className = "positive";
+                timerText.className = "timer_positive";
                 sound.pause();
             } else if (time < 0) {
-		        timerText.className = "negative";
-                sound.play();
+		        timerText.className = "timer_negative";
+				this.actualTimeLeft = this.config.currentTimer;
+                //sound.play();
+				pause();
             } else {
-		        timerText.className = "";
+		        timerText.className = "timer_zero";
                 sound.pause();
             }
             timerText.innerHTML = 
@@ -92,7 +115,7 @@ Module.register("MMM-KitchenTimer",{
         }
         var timerText = document.createElement("span");
         var wrapper = document.createElement("div");
-
+		
         // Create buttons
         for (var i=0; i<this.config.timertext.length; i++) {
             var el =  document.createElement("button");
@@ -100,7 +123,7 @@ Module.register("MMM-KitchenTimer",{
             el.counter = i;
             var self = this;
             el.addEventListener("click", function(event) {
-                beep.play();
+                //beep.play();
                 addSeconds(self.config.timersecs[this.counter]);
                 start();
             }); 
@@ -120,17 +143,29 @@ Module.register("MMM-KitchenTimer",{
         display();
         timerText.addEventListener("click", function(event) {
             if (interval) {
-                beep.play();
+                //beep.play();
                 pause();
             } else if (time != 0) {
-                beep.play();
+                //beep.play();
                 start();
             }
         });
         var stopButton = document.createElement("button");
         stopButton.innerHTML = "X";
         stopButton.addEventListener("click", stop);
-        wrapper.appendChild(stopButton);
+        //wrapper.appendChild(stopButton);
+		if (this.startTimer)
+		{
+			this.startTimer = false;
+			time = this.actualTimeLeft;
+			start();
+		}
+		else
+		{
+			time = this.config.currentTimer;
+			this.actualTimeLeft = this.config.currentTimer;
+			pause();
+		}
         return wrapper;
     }
 });
